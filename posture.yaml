@@ -1,0 +1,240 @@
+esphome:
+  name: "posture"
+
+esp32:
+  board: esp32-gateway
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "nfnYAG3FUkTswroB07rg58FRaVjqLf6PBTBWksNyUG0="
+
+ota:
+  password: "d8eae4edb147c51e0936caa0e6f4c3ac"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Solkiran Fallback Hotspot"
+    password: "uWugsKLl8tG9"
+
+captive_portal:
+    
+   
+i2c:
+  id: i2c0
+  sda: GPIO16
+  scl: GPIO32
+  scan: True
+
+
+ads1115:
+  - address: 0x48
+    i2c_id: i2c0
+    id: ads1115_hub0
+    continuous_mode: True
+
+  - address: 0x49
+    i2c_id: i2c0
+    id: ads1115_hub1
+    continuous_mode: True
+
+  - address: 0x4a
+    i2c_id: i2c0
+    id: ads1115_hub2
+    continuous_mode: True
+
+  - address: 0x4b
+    i2c_id: i2c0
+    id: ads1115_hub3
+    continuous_mode: True
+
+
+sensor:
+  - platform: ads1115
+    multiplexer: A0_GND
+    ads1115_id : ads1115_hub0
+    gain: 6.144
+    name: "ADS1115 Channel0 A0-GND"
+    update_interval: 1s
+
+  - platform: ads1115
+    multiplexer: A1_GND
+    ads1115_id : ads1115_hub0
+    gain: 6.144
+    name: "ADS1115 Channel0 A1-GND"
+    update_interval: 1s
+
+  - platform: ads1115
+    multiplexer: A2_GND
+    ads1115_id : ads1115_hub0
+    gain: 6.144
+    name: "ADS1115 Channel0 A2-GND"
+    update_interval: 1s
+
+  - platform: ads1115
+    multiplexer: A3_GND
+    ads1115_id : ads1115_hub0
+    gain: 6.144
+    name: "ADS1115 Channel0 A3-GND"
+    update_interval: 1s
+
+  - platform: ads1115
+    multiplexer: A0_GND
+    ads1115_id : ads1115_hub1
+    gain: 6.144
+    name: "ADS1115 Channel1 A0-GND"
+    update_interval: 1s
+
+  - platform: ads1115
+    multiplexer: A1_GND
+    ads1115_id : ads1115_hub1
+    gain: 6.144
+    name: "ADS1115 Channel1 A1-GND"
+    update_interval: 1s
+
+  - platform: ads1115
+    multiplexer: A2_GND
+    ads1115_id : ads1115_hub1
+    gain: 6.144
+    name: "ADS1115 Channel1 A2-GND"
+    update_interval: 1s
+
+  - platform: ads1115
+    multiplexer: A3_GND
+    ads1115_id : ads1115_hub1
+    gain: 6.144
+    name: "ADS1115 Channel1 A3-GND"
+    update_interval: 1s
+
+  - platform: ads1115
+    multiplexer: A0_GND
+    ads1115_id : ads1115_hub2
+    gain: 6.144
+    name: "ADS1115 Channel2 A0-GND"
+    update_interval: 1s
+
+  - platform: ads1115
+    multiplexer: A1_GND
+    ads1115_id : ads1115_hub2
+    gain: 6.144
+    name: "ADS1115 Channel2 A1-GND"
+    update_interval: 1s
+
+  - platform: ads1115
+    multiplexer: A2_GND
+    ads1115_id : ads1115_hub2
+    gain: 6.144
+    name: "ADS1115 Channel2 A2-GND"
+    update_interval: 1s
+
+  - platform: ads1115
+    multiplexer: A3_GND
+    ads1115_id : ads1115_hub2
+    gain: 6.144
+    name: "ADS1115 Channel2 A3-GND"
+    update_interval: 1s
+
+  - platform: ads1115
+    multiplexer: A0_GND
+    ads1115_id : ads1115_hub3
+    gain: 6.144
+    name: "ADS1115 Channel3 A0-GND"
+    update_interval: 1s
+
+  - platform: ads1115
+    multiplexer: A1_GND
+    ads1115_id : ads1115_hub3
+    gain: 6.144
+    name: "ADS1115 Channel3 A1-GND"
+    update_interval: 1s
+
+  - platform: ads1115
+    multiplexer: A2_GND
+    ads1115_id : ads1115_hub3
+    gain: 6.144
+    name: "ADS1115 Channel3 A2-GND"
+    update_interval: 1s
+
+  - platform: ads1115
+    multiplexer: A3_GND
+    ads1115_id : ads1115_hub3
+    gain: 6.144
+    name: "ADS1115 Channel3 A3-GND"
+    update_interval: 1s
+    
+
+# Individual outputs
+switch:
+  - platform: gpio
+    name: "Led"
+    id: led
+    pin: 
+      number: GPIO33
+      mode:
+        output: True
+      inverted: False
+    # on_turn_on:
+    # - delay: 500ms
+    # - switch.turn_off: led
+
+
+status_led:
+    pin: 
+      number: GPIO33
+      inverted: False
+
+
+light:
+  - platform: status_led
+    name: "Switch state"
+    pin: 
+      number: GPIO33
+      inverted: False
+
+  - platform: binary
+    name: "Desk Lamp"
+    output: o33
+
+
+output:
+  - platform: gpio
+    id: o33
+    pin: 
+      number: GPIO33
+      inverted: False
+
+
+# Individual inputs
+binary_sensor:
+  - platform: gpio
+    name: "Button"
+    id: "button"
+    pin: 
+      number: GPIO34
+      mode: 
+        input: True
+      inverted: False
+    on_state:
+      then:
+        - output.turn_on: o33
+    
+
+script:
+  - id: blink_light
+    parameters:
+      delay_ms: int
+    then:
+      - output.turn_on: o33
+      # The param delay_ms is accessible using a lambda
+      - delay: !lambda return delay_ms;
+      - output.turn_off: o33
+
